@@ -5,4 +5,6 @@ $ cd learngit
 $ pwd //pwd命令用于显示当前目`<F12>
 /Users/michael/learngit
 pwd命令用于显示当前目录。在我的Mac上，这个仓库位于/Users/michael/learngit
-
+Git is a distributed version control system.
+Git is free software distributed under the GPL.
+Git has a mutable index called stage
