@@ -1,0 +1,8 @@
+创建一个版本库非常简单，首先，选择一个合适的地方，创建一个空目录：
+
+$ mkdir learngiti  //创建文件
+$ cd learngit
+$ pwd //pwd命令用于显示当前目`<F12>
+/Users/michael/learngit
+pwd命令用于显示当前目录。在我的Mac上，这个仓库位于/Users/michael/learngit
+
