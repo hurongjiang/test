@@ -1,0 +1,50 @@
+SSH连接时出现Host key verification failed的原因及解决方法
+SSH连接的时候Host key verification failed.
+[root@cache001 swftools-0.9.0]# ssh 192.168.1.90
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@    WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!     @
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+IT IS POSSIBLE THAT SOMEONE IS DOING SOMETHING NASTY!
+Someone could be eavesdropping on you right now (man-in-the-middle attack)!
+It is also possible that the RSA host key has just been changed.
+The fingerprint for the RSA key sent by the remote host is
+05:25:84:ea:dd:92:8d:80:ce:ad:5b:79:58:fe:c9:42.
+Please contact your system administrator.
+Add correct host key in /root/.ssh/known_hosts to get rid of this message.
+Offending key in /root/.ssh/known_hosts:10
+RSA host key for 192.168.1.90 has changed and you have requested strict checking.
+Host key verification failed.
+＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+用OpenSSH的人都知ssh会把你每个你访问过计算机的公钥(public key)都记录在~/.ssh/known_hosts。当下次访问相同计算机时，OpenSSH会核对公钥。如果公钥不同，OpenSSH会发出警告，避免你受到DNS Hijack之类的攻击。
+SSH对主机的public_key的检查等级是根据StrictHostKeyChecking变量来配置的。默认情况下，StrictHostKeyChecking=ask。简单所下它的三种配置值：
+
+1.StrictHostKeyChecking=no  
+
+#最不安全的级别，当然也没有那么多烦人的提示了，相对安全的内网时建议使用。如果连接server的key在本地不存在，那么就自动添加到文件中（默认是known_hosts），并且给出一个警告。
+
+2.StrictHostKeyChecking=ask  #默认的级别，就是出现刚才的提示了。如果连接和key不匹配，给出提示，并拒绝登录。
+
+3.StrictHostKeyChecking=yes  #最安全的级别，如果连接与key不匹配，就拒绝连接，不会提示详细信息。
+我一般是用方法2解决
+
+－－－－－－－－－－－－－
+解决方法 1
+－－－－－－－－－－－－－
+对于我来说，在内网的进行的一些测试，为了方便，选择最低的安全级别。在.ssh/config（或者/etc/ssh/ssh_config）中配置：
+
+StrictHostKeyChecking no
+UserKnownHostsFile /dev/null
+（注：这里为了简便，将knownhostfile设为/dev/null，就不保存在known_hosts中了）
+－－－－－－－－－－－－－－－
+解决方法 2
+－－－－－－－－－－－－－－－
+vi ~/.ssh/known_hosts
+删除对应ip的相关rsa信息
+
+－－－－－－－－－－－－－－－
+解决方法 3
+－－－－－－－－－－－－－－－
+rm known_hosts
+
+转自：https://www.cnblogs.com/cuizhipeng/p/5329848.html
